@@ -19,7 +19,7 @@ namespace Toniko
         /// </summary>
         static void Main(string[] args)
         {
-            using (Game1 game = Game1.Instance)
+            using (HQ game = HQ.Instance)
             {
                 game.Run();
             }

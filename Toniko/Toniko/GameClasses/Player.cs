@@ -22,11 +22,6 @@ namespace Toniko.GameClasses
 	{
 		#region Fields
 		/// <summary>
-		/// The player's movement speed
-		/// </summary>
-		private const float Speed = 2.0f;
-		
-		/// <summary>
 		/// The only instance of the class
 		/// </summary>
 		private static Player _instance;
@@ -35,6 +30,16 @@ namespace Toniko.GameClasses
 		/// The amount of milliseconds each frame is to be displayed
 		/// </summary>
 		private readonly int _millisecondsPerFrame;
+
+		/// <summary>
+		/// The speed at which the player moves by default
+		/// </summary>
+		private float _baseSpeed;
+
+		/// <summary>
+		/// Actual horizontal movement speed
+		/// </summary>
+		private float _actualSpeed;
 
 		/// <summary>
 		/// The player sprite sheet
@@ -99,12 +104,14 @@ namespace Toniko.GameClasses
 		/// </summary>
 		private Player()
 		{
-			this._position = new Vector2(20, 400);
+			// Load objects
+			this.Initialize();
+
+			this._baseSpeed = 3.5f;
 
 			this._currentFrame = 2;
-			this._frameSize = new Point(66, 69);
 
-			this._millisecondsPerFrame = 100;
+			this._millisecondsPerFrame = (int)(100 / (HQ.Instance.SpeedMultiplier == 1.0 ? 1 : HQ.Instance.SpeedMultiplier * 2));
 			this._millisecondsSinceLastFrame = 0;
 
 			this._currentState = State.Still;
@@ -145,14 +152,16 @@ namespace Toniko.GameClasses
 		/// </summary>
 		public void LoadContent()
 		{
-			this._texture = Game1.Instance.Content.Load<Texture2D>(@"Images/mario_sprites");
+			this._texture = HQ.Instance.Content.Load<Texture2D>(@"Images/mario_sprites");
 		}
 
 		/// <summary>
-		/// This method does fuck all
+		/// Initialises nongraphic content
 		/// </summary>
 		public void Initialize()
 		{
+			this._position = new Vector2(20, 400);
+			this._frameSize = new Point(66, 69);
 		}
 
 		/// <summary>
@@ -161,6 +170,8 @@ namespace Toniko.GameClasses
 		/// <param name="gameTime">Delta time</param>
 		public void Update(GameTime gameTime)
 		{
+			this._actualSpeed = this._baseSpeed * HQ.Instance.SpeedMultiplier;
+
 			switch (this._currentState)
 			{
 				case State.Still:
@@ -177,9 +188,8 @@ namespace Toniko.GameClasses
 					break;
 			}
 
-			this._millisecondsSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
-
-			if (this._millisecondsSinceLastFrame >= this._millisecondsPerFrame)
+			// Determine which frames to use based on game time
+			if ((this._millisecondsSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds) >= this._millisecondsPerFrame)
 			{
 				this._millisecondsSinceLastFrame -= this._millisecondsPerFrame;
 
@@ -193,13 +203,13 @@ namespace Toniko.GameClasses
 
 			if (keyboardState.IsKeyDown(Keys.Right))
 			{
-				this._position.X += Speed;
+				this._position.X += this._actualSpeed;
 				this._currentState = State.Walking;
 				this._facingLeft = false;
 			}
 			else if (keyboardState.IsKeyDown(Keys.Left))
 			{
-				this._position.X -= Speed;
+				this._position.X -= this._actualSpeed;
 				this._currentState = State.Walking;
 				this._facingLeft = true;
 			}
@@ -222,7 +232,7 @@ namespace Toniko.GameClasses
 		/// </summary>
 		public void Draw()
 		{
-			Game1.Instance.SpriteBatch.Draw(this._texture, this._position, new Rectangle(this._currentFrame * this._frameSize.X, 0, this._frameSize.X, this._frameSize.Y), Color.White, 0, Vector2.Zero, 1, this._facingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
+			HQ.Instance.SpriteBatch.Draw(this._texture, this._position, new Rectangle(this._currentFrame * this._frameSize.X, 0, this._frameSize.X, this._frameSize.Y), Color.White, 0, Vector2.Zero, 1, this._facingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 0);
 		}
 		#endregion
 

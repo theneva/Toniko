@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Game1.cs" company="X">
+// <copyright file="HQ.cs" company="X">
 //   Durrr
 // </copyright>
 // <summary>
@@ -18,40 +18,46 @@ namespace Toniko
 	/// <summary>
 	/// This is the main type for your game
 	/// </summary>
-	public class Game1 : Microsoft.Xna.Framework.Game
+	public class HQ : Game
 	{
-
 		/// <summary>
 		/// The only instance of the class
 		/// </summary>
-		private static Game1 _instance;
+		private static HQ _instance;
 
 		/// <summary>
 		/// The game's GraphicsDeviceManager
 		/// </summary>
-		private GraphicsDeviceManager graphics;
+		private GraphicsDeviceManager _graphics;
 
 		/// <summary>
-		/// Prevents a default instance of the <see cref="Game1"/> class from being created.
+		/// Prevents a default instance of the <see cref="HQ"/> class from being created.
 		/// </summary>
-		private Game1()
+		private HQ()
 		{
-			this.graphics = new GraphicsDeviceManager(this);
+			this._graphics = new GraphicsDeviceManager(this);
 			this.Content.RootDirectory = "Content";
+
+			this.SpeedMultiplier = 1.0f;
 		}
 
 		/// <summary>
 		/// Gets the instance of the class
 		/// </summary>
-		public static Game1 Instance
+		public static HQ Instance
 		{
-			get { return _instance ?? (_instance = new Game1()); }
+			get { return _instance ?? (_instance = new HQ()); }
 		}
 
 		/// <summary>
 		/// Gets the SpriteBatch used for drawing by all classes
 		/// </summary>
 		public SpriteBatch SpriteBatch { get; private set; }
+
+		/// <summary>
+		/// Gets or sets SpeedMultiplier.
+		/// </summary>
+		public float SpeedMultiplier { get; set; }
 
 		/// <summary>
 		/// Allows the game to perform any initialization it needs to before starting to run.
@@ -63,6 +69,7 @@ namespace Toniko
 		{
 			// TODO: Add your initialization logic here
 			Player.Instance.Initialize();
+			EnemyHandler.Instance.Initialize();
 
 			base.Initialize();
 		}
@@ -103,6 +110,9 @@ namespace Toniko
 
 			// TODO: Add your update logic here
 			Player.Instance.Update(gameTime);
+			EnemyHandler.Instance.Update(gameTime);
+
+			this.SpeedMultiplier = Keyboard.GetState().IsKeyDown(Keys.Space) ? 3.0f : 1.0f;
 
 			base.Update(gameTime);
 		}
