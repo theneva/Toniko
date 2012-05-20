@@ -1,7 +1,16 @@
-using System;
+// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Program.cs" company="X">
+//   Durrr
+// </copyright>
+// <summary>
+//   Defines the Program type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace Toniko
 {
+	using Toniko;
+
 #if WINDOWS || XBOX
     static class Program
     {
@@ -10,7 +19,7 @@ namespace Toniko
         /// </summary>
         static void Main(string[] args)
         {
-            using (Game1 game = new Game1())
+            using (Game1 game = Game1.Instance)
             {
                 game.Run();
             }
