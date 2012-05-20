@@ -20,22 +20,38 @@ namespace Toniko
 	/// </summary>
 	public class Game1 : Microsoft.Xna.Framework.Game
 	{
-		public GraphicsDeviceManager Graphics;
-		public SpriteBatch SpriteBatch;
 
-		#region Singleton constructor
+		/// <summary>
+		/// The only instance of the class
+		/// </summary>
 		private static Game1 _instance;
+
+		/// <summary>
+		/// The game's GraphicsDeviceManager
+		/// </summary>
+		private GraphicsDeviceManager graphics;
+
+		/// <summary>
+		/// Prevents a default instance of the <see cref="Game1"/> class from being created.
+		/// </summary>
+		private Game1()
+		{
+			this.graphics = new GraphicsDeviceManager(this);
+			this.Content.RootDirectory = "Content";
+		}
+
+		/// <summary>
+		/// Gets the instance of the class
+		/// </summary>
 		public static Game1 Instance
 		{
 			get { return _instance ?? (_instance = new Game1()); }
 		}
 
-		private Game1()
-		{
-			this.Graphics = new GraphicsDeviceManager(this);
-			this.Content.RootDirectory = "Content";
-		}
-		#endregion
+		/// <summary>
+		/// Gets the SpriteBatch used for drawing by all classes
+		/// </summary>
+		public SpriteBatch SpriteBatch { get; private set; }
 
 		/// <summary>
 		/// Allows the game to perform any initialization it needs to before starting to run.
@@ -46,6 +62,7 @@ namespace Toniko
 		protected override void Initialize()
 		{
 			// TODO: Add your initialization logic here
+			Player.Instance.Initialize();
 
 			base.Initialize();
 		}
@@ -64,8 +81,7 @@ namespace Toniko
 		}
 
 		/// <summary>
-		/// UnloadContent will be called once per game and is the place to unload
-		/// all content.
+		/// This method does fuck all
 		/// </summary>
 		protected override void UnloadContent()
 		{

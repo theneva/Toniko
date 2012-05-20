@@ -149,6 +149,13 @@ namespace Toniko.GameClasses
 		}
 
 		/// <summary>
+		/// This method does fuck all
+		/// </summary>
+		public void Initialize()
+		{
+		}
+
+		/// <summary>
 		/// Selects frames based on state, listens for user input
 		/// </summary>
 		/// <param name="gameTime">Delta time</param>
